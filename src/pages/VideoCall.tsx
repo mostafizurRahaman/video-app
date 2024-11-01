@@ -3,13 +3,13 @@ import AgoraUIKit from "agora-react-uikit";
 import { useParams } from "react-router-dom";
 
 const VideoCall = () => {
-  const id = useParams();
+  const params = useParams();
   const a = import.meta.env.VITE_VIDEO_CALL_ID;
-  console.log(id, a);
+  // console.log({ id, a });
   const [videoCall, setVideoCall] = useState(false);
   const rtcProps = {
-    appId: "7072621e8aad49d9b50a9fad8b336ade",
-    channel: "new", // your agora channel
+    appId: a || "test",
+    channel: params?.id || "test", // your agora channel
     token: null, // use null or skip if using app in testing mode
   };
   const callbacks = {
@@ -17,10 +17,32 @@ const VideoCall = () => {
   };
   return videoCall ? (
     <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
-      <AgoraUIKit rtcProps={rtcProps} callbacks={callbacks} />
+      <AgoraUIKit
+        rtcProps={rtcProps}
+        callbacks={callbacks}
+        styleProps={{
+          maxViewStyles: {
+            // Adjust styles for maximum view
+            layout: "grid",
+            grid: {
+              row: 1, // Number of rows
+              col: 5, // Number of columns (5 elements per row)
+              gap: 10, // Optional gap between video views
+            },
+          },
+        }}
+      />
     </div>
   ) : (
-    <h3 onClick={() => setVideoCall(true)}>Start Call</h3>
+    <div className="flex h-screen w-full items-center justify-center">
+      <button
+        className={` bg-blue-500 w-[300px] rounded-md p-2 px-4 font-bold   text-white`}
+        // disabled={!}
+        onClick={() => setVideoCall(true)}
+      >
+        <span> Start Call</span>
+      </button>
+    </div>
   );
 };
 
